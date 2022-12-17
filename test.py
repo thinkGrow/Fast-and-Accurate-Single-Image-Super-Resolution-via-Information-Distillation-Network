@@ -30,14 +30,16 @@ def main():
 
     # model
     print('Loading model...')
-    tensor_lr = tf.placeholder('float32', [1, None, None, 3], name='tensor_lr')
-    tensor_b = tf.placeholder('float32', [1, None, None, 3], name='tensor_b')
+    tensor_lr = tf.compat.v1.disable_eager_execution(
+        'float32', [1, None, None, 3], name='tensor_lr')
+    tensor_b = tf.compat.v1.placeholder(
+        'float32', [1, None, None, 3], name='tensor_b')
 
     tensor_sr = IDN(tensor_lr, tensor_b, scale)
-    sess = tf.Session(config=tf.ConfigProto(
+    sess = tf.compat.v1.Session(config=tf.compat.v1.ConfigProto(
         allow_soft_placement=True, log_device_placement=False))
-    sess.run(tf.global_variables_initializer())
-    saver = tf.train.Saver()
+    sess.run(tf.compat.v1.global_variables_initializer())
+    saver = tf.compat.v1.train.Saver()
     saver.restore(sess, model_path)
 
     # result
